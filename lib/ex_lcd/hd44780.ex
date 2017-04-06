@@ -72,7 +72,7 @@ defmodule ExLCD.HD44780 do
 
   use Bitwise
   use ExLCD.Driver
-  use ExLCD.IO
+  alias ElixirALE.GPIO
 
   @low    0
   @high   1
@@ -126,7 +126,7 @@ defmodule ExLCD.HD44780 do
       :d0_pid, :d1_pid, :d2_pid, :d3_pid,
       :d4_pid, :d5_pid, :d6_pid, :d7_pid ]
     |>  Enum.filter(fn x -> not is_nil(display[x]) end)
-    |>  Enum.each(fn x -> @gpio.release(display[x]) end)
+    |>  Enum.each(fn x -> GPIO.release(display[x]) end)
     :ok
   end
 
@@ -192,7 +192,7 @@ defmodule ExLCD.HD44780 do
 
   # start ElixirALE.GPIO GenServer to manage a GPIO pin and return the pid
   defp start_pin(pin, direction) do
-    with {:ok, pid} <- @gpio.start_link(pin, direction), do: pid
+    with {:ok, pid} <- GPIO.start_link(pin, direction), do: pid
   end
 
   # Software Power On Init (POI) for 4bit operation of HD44780 controller.
@@ -382,33 +382,33 @@ defmodule ExLCD.HD44780 do
 
   # Write 8 parallel bits to the device
   defp write_8_bits(display, bits) do
-    @gpio.write(display.d0_pid, bits &&& 0x01)
-    @gpio.write(display.d1_pid, bits >>> 1 &&& 0x01)
-    @gpio.write(display.d2_pid, bits >>> 2 &&& 0x01)
-    @gpio.write(display.d3_pid, bits >>> 3 &&& 0x01)
-    @gpio.write(display.d4_pid, bits >>> 4 &&& 0x01)
-    @gpio.write(display.d5_pid, bits >>> 5 &&& 0x01)
-    @gpio.write(display.d6_pid, bits >>> 6 &&& 0x01)
-    @gpio.write(display.d7_pid, bits >>> 7 &&& 0x01)
+    GPIO.write(display.d0_pid, bits &&& 0x01)
+    GPIO.write(display.d1_pid, bits >>> 1 &&& 0x01)
+    GPIO.write(display.d2_pid, bits >>> 2 &&& 0x01)
+    GPIO.write(display.d3_pid, bits >>> 3 &&& 0x01)
+    GPIO.write(display.d4_pid, bits >>> 4 &&& 0x01)
+    GPIO.write(display.d5_pid, bits >>> 5 &&& 0x01)
+    GPIO.write(display.d6_pid, bits >>> 6 &&& 0x01)
+    GPIO.write(display.d7_pid, bits >>> 7 &&& 0x01)
     pulse_en(display)
   end
 
   # Write 4 parallel bits to the device
   defp write_4_bits(display, bits) do
-    @gpio.write(display.d4_pid, bits &&& 0x01)
-    @gpio.write(display.d5_pid, bits >>> 1 &&& 0x01)
-    @gpio.write(display.d6_pid, bits >>> 2 &&& 0x01)
-    @gpio.write(display.d7_pid, bits >>> 3 &&& 0x01)
+    GPIO.write(display.d4_pid, bits &&& 0x01)
+    GPIO.write(display.d5_pid, bits >>> 1 &&& 0x01)
+    GPIO.write(display.d6_pid, bits >>> 2 &&& 0x01)
+    GPIO.write(display.d7_pid, bits >>> 3 &&& 0x01)
     pulse_en(display)
   end
 
   defp rs(display, value) do
-    @gpio.write(display[:rs_pid], value)
+    GPIO.write(display[:rs_pid], value)
     display
   end
 
   defp en(display, value) do
-    @gpio.write(display[:en_pid], value)
+    GPIO.write(display[:en_pid], value)
     display
   end
 

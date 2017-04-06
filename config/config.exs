@@ -4,16 +4,14 @@ use Mix.Config
 # my Raspberry Pi0W. The 4 bit interface requires 6 GPIO pins
 # which are managed by the driver:
 #
-# config :ex_lcd, lcd: %{
-#   rs: 25,
-#   en: 24,
-#   d4: 23,
-#   d5: 22,
-#   d6: 18,
-#   d7: 17,
-#   rows: 2,
-#   cols: 20,
-#   font_5x10: false
-# }
-
-import_config "#{Mix.env}.exs"
+config :ex_lcd, lcd: %{
+  rs: 25,
+  en: 24,
+  d4: 23,
+  d5: 22,
+  d6: 18,
+  d7: 17,
+  rows: 2,
+  cols: 20,
+  font_5x10: false
+}
