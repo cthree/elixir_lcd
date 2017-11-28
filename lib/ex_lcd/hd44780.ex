@@ -306,7 +306,7 @@ defmodule ExLCD.HD44780 do
 
   # Program custom character to CGRAM
   defp command(display, {:char, idx, bitmap}) when idx in 0..7 and length(bitmap) === 8 do
-    write_a_byte(display, @cmd_setcgramaddr ||| idx)
+    write_a_byte(display, @cmd_setcgramaddr ||| (idx <<< 3))
     for line <- bitmap do
       write_a_byte(display, line, @high)
     end
