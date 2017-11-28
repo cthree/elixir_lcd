@@ -323,11 +323,13 @@ defmodule ExLCD.HD44780 do
   defp clear(display) do
     display
     |>  write_a_byte(@cmd_clear)
+    |>  delay(3_000)
   end
 
   defp home(display) do
     display
     |>  write_a_byte(@cmd_home)
+    |>  delay(3_000)
   end
 
   # DDRAM is organized as two 40 byte rows. In a 2x display the first row
@@ -369,7 +371,7 @@ defmodule ExLCD.HD44780 do
 
   # Write a byte to the device
   defp write_a_byte(display, byte_to_write, rs_value \\ @low) do
-    display |> rs(rs_value)
+    display |> rs(rs_value) |> delay(1_000)
 
     case display[:d0] do
       nil -> display
@@ -419,8 +421,11 @@ defmodule ExLCD.HD44780 do
     |>  en(@low)
   end
 
-  # defp delay(display, ms) do
-  #   Process.sleep(ms)
-  #   display
-  # end
+  def delay(display, microseconds) do
+    # Unfortunately, BEAM does not provides microsecond precision
+    # And if we need waiting, we MUST wait
+    ms = max(round(microseconds / 1000), 1)
+    Process.sleep(ms)
+    display
+  end
 end
