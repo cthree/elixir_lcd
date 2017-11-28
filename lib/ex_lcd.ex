@@ -259,7 +259,7 @@ defmodule ExLCD do
   def handle_cast({:left, cols}, state) do
     execute({:left, cols}, state)
   end
-  def handle_cast({:char, idx, bitmap}, state) when idx in 0..7 and byte_size(bitmap) === 8 do
+  def handle_cast({:char, idx, bitmap}, state) when idx in 0..7 and length(bitmap) === 8 do
     execute({:char, idx, bitmap}, state)
   end
   def handle_cast({:enable, feature}, state) do
